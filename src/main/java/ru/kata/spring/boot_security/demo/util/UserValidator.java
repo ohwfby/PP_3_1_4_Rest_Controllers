@@ -30,8 +30,9 @@ public class UserValidator implements Validator {
             userDetailsService.loadUserByUsername(user.getUsername());
 
         }catch (UsernameNotFoundException e) {
-            errors.rejectValue("username", "username.notfound");
+            return;
         }
+        errors.rejectValue("username", null, "Username not found");
 
     }
 }
