@@ -69,11 +69,11 @@ public class User {
         this.username = username;
     }
 
-    public @NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 30, message = "Password should be between 2 and 30 characters") String getPassword() {
+    public @NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 68, message = "Password should be between 2 and 30 characters") String getPassword() {
         return password;
     }
 
-    public void setPassword(@NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 30, message = "Password should be between 2 and 30 characters") String password) {
+    public void setPassword(@NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 68, message = "Password should be between 2 and 30 characters") String password) {
         this.password = password;
     }
 

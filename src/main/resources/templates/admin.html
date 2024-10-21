@@ -33,7 +33,8 @@
        onclick="window.location.href = 'add'"/>
 <br/><br/>
 
-<input type="button" value="Logout"
-       onclick="window.location.href = 'logout'"/>
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="Logout" />
+</form>
 </body>
 </html>

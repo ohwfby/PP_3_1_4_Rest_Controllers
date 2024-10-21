@@ -48,19 +48,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findAll();
     }
 
-//    public boolean saveUser(User user) {
-//        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
-//
-//        if (userFromDB.isPresent()) {
-//            return false;
-//        }
-//
-//        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-//        user.setPassword(user.getPassword());
-//        userRepository.save(user);
-//        return true;
-//    }
-
     public boolean deleteUser(Long userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);

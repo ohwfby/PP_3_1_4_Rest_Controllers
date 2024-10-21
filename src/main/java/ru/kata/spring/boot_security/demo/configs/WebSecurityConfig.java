@@ -33,8 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //конфигурация авторизации
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests() //
+        http.authorizeRequests()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/login","/registration", "/", "/index").permitAll()
                 .anyRequest().hasAnyRole("ADMIN", "USER")
@@ -53,14 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // настраиваем аутентификацию
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-//                .passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(getPasswordEncoder());
     }
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(16);
     }
-//
 }

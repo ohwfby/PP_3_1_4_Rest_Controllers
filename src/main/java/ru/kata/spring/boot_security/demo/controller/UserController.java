@@ -33,7 +33,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         System.out.println(userDetails.getUser());
-//        model.addAttribute("user", userDetailsServiceImpl.allUsers().get(0));
         return "index";
     }
 }
