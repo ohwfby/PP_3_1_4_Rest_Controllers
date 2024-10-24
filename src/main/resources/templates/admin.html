@@ -15,10 +15,13 @@
             <th>YearOfBirth</th>
             <th>Actions</th>
         </tr>
+        <input type="button" value="My details"
+               onclick="window.location.href = 'user'"/>
+        <br/><br/>
         <tr th:each ="user : ${users}">
             <td th:utext="${user.getUsername()}">...</td>
             <td th:utext="${user.getPassword()}">...</td>
-            <td th:utext="${user.getRole()}">...</td>
+            <td th:utext="${user.getRoles()}">...</td>
             <td th:utext="${user.getYearOfBirth()}">...</td>
             <td>
                 <a class="btn btn-primary btn-xs"

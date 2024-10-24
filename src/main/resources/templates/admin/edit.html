@@ -24,10 +24,16 @@
          th:errors="*{yearOfBirth}">Age error</div>
     <br/>
 
-    <label for="role">Role</label>
-    <input type="text" th:field="*{role}" id="role"/>
-    <div style="color:red" th:if="${#fields.hasErrors('role')}"
-         th:errors="*{role}">Role error</div>
+    <label>Role</label>
+    <div th:each="role : ${roles}">
+        <label>
+            <input type="checkbox" th:field="*{roles}" th:value="${role.id}" th:checked="${user.roles.contains(role)}" />
+        </label>
+        <span th:text="${role.name}"></span><br/>
+    </div>
+    <div style="color:red" th:if="${#fields.hasErrors('roles')}"
+         th:errors="*{roles}">Role error</div>
+    <br/>
     <br/>
     <input type="submit" value="Edit"/>
 </form>

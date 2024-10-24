@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,10 @@ import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -57,14 +60,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     @Transactional
     public void save(User user) {
-        if (userRepository.findById(user.getId()).isPresent()) {
-        } else {
-            em.persist(user);
-        }
-    }
+        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
 
-    public List<User> usergetList(Long idMin) {
-        return em.createQuery("SELECT u FROM User u WHERE u.id > :paramId", User.class)
-                .setParameter("paramId", idMin).getResultList();
+        if (userFromDB != null) {
+            return;
+        }
+        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        userRepository.save(user);
     }
 }

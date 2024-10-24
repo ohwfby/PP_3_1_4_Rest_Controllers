@@ -1,21 +1,11 @@
 package ru.kata.spring.boot_security.demo.entity;
 
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "users")
@@ -40,9 +30,7 @@ public class User {
     @Min(value = 1900, message = "Year of birth must be over 1900")
     @Column(name = "year_of_birth")
     private Integer yearOfBirth;
-    @Column(name = "role")
-    private String role;
-
+    @Column(name = "roles")
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
@@ -86,13 +74,6 @@ public class User {
         this.yearOfBirth = yearOfBirth;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     @Override
     public String toString() {
@@ -107,6 +88,7 @@ public class User {
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+            this.roles = roles;
+
     }
 }
