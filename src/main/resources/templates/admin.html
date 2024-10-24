@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
@@ -9,19 +9,21 @@
 <div>
     <table border="1">
         <tr>
-            <th>First Name</th>
+            <th>Username</th>
             <th>Password</th>
             <th>Role</th>
+            <th>YearOfBirth</th>
             <th>Actions</th>
         </tr>
         <tr th:each ="user : ${users}">
             <td th:utext="${user.getUsername()}">...</td>
             <td th:utext="${user.getPassword()}">...</td>
-            <td th:utext="${user.getRoles()}">...</td>
+            <td th:utext="${user.getRole()}">...</td>
+            <td th:utext="${user.getYearOfBirth()}">...</td>
             <td>
                 <a class="btn btn-primary btn-xs"
-                   th:href="@{/edit(id=${user.getId()})}">Edit</a>
-                <form th:method="DELETE" th:action="@{delete(id=${user.getId()})}">
+                   th:href="@{admin/edit(id=${user.getId()})}">Edit</a>
+                <form th:method="DELETE" th:action="@{admin/delete(id=${user.getId()})}">
                     <input type="submit" value="Delete">
                 </form>
             </td>
@@ -30,7 +32,7 @@
 </div>
 <br/><br/>
 <input type="button" value="Add"
-       onclick="window.location.href = 'add'"/>
+       onclick="window.location.href = '/admin/add'"/>
 <br/><br/>
 
 <form th:action="@{/logout}" th:method="POST">

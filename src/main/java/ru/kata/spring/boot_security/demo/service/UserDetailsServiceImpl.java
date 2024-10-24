@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     @PersistenceContext
     private EntityManager em;
 
@@ -48,12 +49,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public boolean deleteUser(Long userId) {
-        if (userRepository.findById(userId).isPresent()) {
-            userRepository.deleteById(userId);
-            return true;
+    @Transactional
+    public void delete(Long id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
         }
-        return false;
+    }
+    @Transactional
+    public void save(User user) {
+        if (userRepository.findById(user.getId()).isPresent()) {
+        } else {
+            em.persist(user);
+        }
     }
 
     public List<User> usergetList(Long idMin) {

@@ -9,9 +9,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "users")
@@ -38,12 +42,9 @@ public class User {
     private Integer yearOfBirth;
     @Column(name = "role")
     private String role;
-    //    @ManyToMany(fetch = FetchType.LAZY)
-//    private Set<Role> roles;
 
-
-
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Role> roles;
 
     public User() {
     }
@@ -92,6 +93,7 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
     @Override
     public String toString() {
         return "User{" +
@@ -100,11 +102,11 @@ public class User {
                 ", password='" + password + '\'' +
                 ", yearOfBirth=" + yearOfBirth + '}';
     }
-//    public Set<Role> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Set<Role> roles) {
-//        this.roles = roles;
-//    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }
