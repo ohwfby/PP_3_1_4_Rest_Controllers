@@ -55,14 +55,6 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/edit")
-    public String editPage(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("roles", roles);
-        return "/admin/edit";
-    }
-
     @GetMapping("/add")
     public String showAddUserPage(Model model) {
         model.addAttribute("user", new User()); // Создаем новый объект User
@@ -79,6 +71,13 @@ public class AdminController {
         }
         userDetailsServiceImpl.save(user);
         return "redirect:/admin";
+    }
+    @GetMapping("/edit")
+    public String editPage(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("roles", roles);
+        return "/admin/edit";
     }
 
     @PostMapping("/edit")
