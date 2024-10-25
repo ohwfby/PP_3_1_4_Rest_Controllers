@@ -16,20 +16,24 @@
             height: 100vh; /* Высота родительского контейнера */
             margin: 0; /* Убираем отступы по умолчанию */
         }
+
         .main {
             display: flex; /* Основное содержимое выравнивается горизонтально */
             flex: 1; /* Остальная область для контента */
         }
+
         .sidebar {
             flex-direction: column; /* Вертикальная ориентация */
             width: 250px; /* Ширина боковой панели */
             background-color: #ffffff; /* Цвет фона - белый */
             color: blue; /* Цвет текста */
         }
+
         .content {
             flex: 1; /* Ширина основного контента */
             padding: 20px; /* Отступы для контента */
         }
+
         .list-group {
             padding-top: 20px; /* Отступы для контента */
             flex: 1; /* Ширина основного контента */
@@ -48,13 +52,15 @@
             <span style="margin-left: 1px;">with roles:</span>
             <span th:text="${roles}" style="margin-left: 5px;"></span>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <form th:action="@{/logout}" th:method="POST">
-                    <input type="submit" value="Logout" style="color: #f8f9fa; border: none; background: transparent; cursor: pointer;" />
+                    <input type="submit" value="Logout"
+                           style="color: #f8f9fa; border: none; background: transparent; cursor: pointer;"/>
                 </form>
             </ul>
         </div>
@@ -81,79 +87,104 @@
     <div class="content">
         <div class="admin-panel">
             <h1 class="text-left">Admin panel</h1>
+
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="users-tab" data-bs-toggle="tab" href="#users"
-                       role="tab" aria-controls="users" aria-selected="true">Users table</a>
+                       role="tab" aria-controls="users" aria-selected="true">Users table
+                    </a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="roles-tab" data-bs-toggle="tab" href="#add"
                        role="tab" aria-controls="roles" aria-selected="false">New User</a>
                 </li>
             </ul>
-
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
                     <h2 class="text-left">All Users</h2>
                     <table id="users-table" class="table table-bordered text-center">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                    <th>Year Of Birth</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody th:each="user : ${users}">
-                <tr>
-                    <td th:text="${user.getId()}"></td>
-                    <td th:text="${user.getUsername()}"></td>
-                    <td th:text="${user.getPassword()}"></td>
-                    <td th:text="${user.getRoles()}"></td>
-                    <td th:text="${user.getYearOfBirth()}"></td>
-                    <td>
-                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit</a>
-
-                        <!--                        <a class="btn btn-primary btn-xs" th:href="@{admin/edit(id=${user.getId()})}">Edit</a>-->
-                    </td>
-                    <td>
-                        <a class="btn btn-danger btn-xs" th:href="@{admin/delete(id=${user.getId()})}">Delete</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Role</th>
+                            <th>Year Of Birth</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="user : ${users}">
+                        <tr>
+                            <td th:text="${user.getId()}"></td>
+                            <td th:text="${user.getUsername()}"></td>
+                            <td th:text="${user.getPassword()}"></td>
+                            <td th:text="${user.getRoles()}"></td>
+                            <td th:text="${user.getYearOfBirth()}"></td>
+                            <td>
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"
+                                   onclick="fillEditModal('${user.getId()}',
+                                    '${user.getUsername()}', '${user.getPassword()}',
+                                     '${user.getYearOfBirth()}',
+                                      '${user.getRoles()}')">Edit</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger btn-xs"
+                                   th:href="@{admin/delete(id=${user.getId()})}">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <!-- Модальное окно -->
-                    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
+                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editModalLabel">Edit User</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Форма для редактирования пользователя -->
-                                    <form>
+                                    <form id="editUserForm" th:action="@{/admin/edit}" method="post">
+                                        <input type="hidden" id="editUserId" name="id"> <!-- Скрытое поле для ID -->
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">Username</label>
-                                            <input type="text" class="form-control" id="username">
+                                            <label for="editUsername" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="editUsername" name="username"
+                                                   required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">Email address</label>
-                                            <input type="email" class="form-control" id="email">
+                                            <label for="editPassword" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="editPassword"
+                                                   name="password" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editYearOfBirth" class="form-label">Year Of Birth</label>
+                                            <input type="number" class="form-control" id="editYearOfBirth"
+                                                   name="yearOfBirth" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editRoles" class="form-label">Role</label>
+                                            <select class="form-select" id="editRoles" name="roles" multiple>
+                                                <option value="USER">User</option>
+                                                <option value="ADMIN">Admin</option>
+                                            </select>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="document.getElementById('editUserForm').submit();">Save Changes
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--Добавление юзера-->
                 <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="roles-tab">
                     <form th:action="@{/admin/add}" method="post"> <!-- Определите путь для формы добавления -->
                         <div class="mb-3">
@@ -182,6 +213,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function fillEditModal(id, username, password, yearOfBirth, roles) {
         document.getElementById('editUserId').value = id; // Устанавливаем ID
@@ -197,6 +229,9 @@
         }
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

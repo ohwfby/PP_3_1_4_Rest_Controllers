@@ -64,8 +64,9 @@ public class AdminController {
     }
 
     @GetMapping("/add")
-    public String showAddUserPage(@ModelAttribute("user") User user) {
-        return "admin/add";
+    public String showAddUserPage(Model model) {
+        model.addAttribute("user", new User()); // Создаем новый объект User
+        return "admin/add"; // Возвращаем HTML-шаблон для добавления
     }
 
     @PostMapping("/add")
