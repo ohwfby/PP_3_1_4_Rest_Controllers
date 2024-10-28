@@ -42,6 +42,7 @@ public class AdminController {
         this.registrationService = registrationService;
     }
 
+
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String admin(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -55,12 +56,6 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/add")
-    public String showAddUserPage(Model model) {
-        model.addAttribute("user", new User()); // Создаем новый объект User
-        return "admin/add"; // Возвращаем HTML-шаблон для добавления
-    }
-
     @PostMapping("/add")
     public String add( @ModelAttribute("user") @Valid User user,
                        BindingResult bindingResult) {
@@ -69,14 +64,13 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "admin/add";
         }
-        userDetailsServiceImpl.save(user);
+        registrationService.register(user);
         return "redirect:/admin";
     }
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("roles", roles);
+        model.addAttribute("roles", roleRepository.findAll());
         return "/admin/edit";
     }
 
