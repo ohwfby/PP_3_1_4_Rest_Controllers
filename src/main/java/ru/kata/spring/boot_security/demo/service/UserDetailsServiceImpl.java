@@ -59,6 +59,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     @Transactional
     public void save(User user) {
+        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
+
+        if (userFromDB != null) {
+            return;
+        }
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         userRepository.save(user);
     }

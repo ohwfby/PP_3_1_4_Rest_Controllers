@@ -55,22 +55,22 @@ public class AdminController {
         model.addAttribute("roles", roles);
         return "admin";
     }
-
+    @GetMapping("/add")
+    public String showAddUserPage(@ModelAttribute("user") User user, Model model) {
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("roles", roles);
+        return "admin/add";
+    }
     @PostMapping("/add")
-    public String add( @ModelAttribute("user") @Valid User user,
-                       BindingResult bindingResult) {
-        userValidator.validate(user, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return "admin/add";
-        }
+    public String add( @ModelAttribute("user") @Valid User user) {
         registrationService.register(user);
         return "redirect:/admin";
     }
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
-        model.addAttribute("roles", roleRepository.findAll());
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("roles", roles);
         return "/admin/edit";
     }
 
@@ -82,7 +82,9 @@ public class AdminController {
         User existingUser = userDetailsServiceImpl.findUserById(user.getId());
         existingUser.setUsername(user.getUsername());
         existingUser.setYearOfBirth(user.getYearOfBirth());
-        existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!user.getPassword().equals(existingUser.getPassword())) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         Set<Role> roles = new HashSet<>();
 
         for (Role role : user.getRoles()) {

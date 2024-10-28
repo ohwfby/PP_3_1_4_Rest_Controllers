@@ -122,9 +122,16 @@
                             <td th:text="${user.getPassword()}"></td>
                             <td th:text="${user.getRoles()}"></td>
                             <td th:text="${user.getYearOfBirth()}"></td>
+<!--                            <td>-->
+<!--                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"-->
+<!--                                   onclick="fillEditModal({id},{username},{password},{yearOfBirth},{roles})">Edit</a>-->
+<!--                            </td>-->
                             <td>
-                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"
-                                   onclick="fillEditModal({id},{username},{password},{yearOfBirth},{roles})">Edit</a>
+                                <a href="/admin/edit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"
+                                   onclick="fillEditModal('${user.id}',
+                                    `${user.getUsername()}`, `${user.getPassword()}`,
+                                     `${user.getYearOfBirth()}`,
+                                      `${user.getRoles()}`)">Edit</a>
                             </td>
 
                             <td>
@@ -155,7 +162,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="editPassword" class="form-label">Password</label>
-                                            <input type="password" class="form-control" id="editPassword"
+                                            <input type="password" class="form-control is-valid" id="editPassword"
                                                    name="password" required aria-describedby="passwordHelpBlock">
                                             <div id="passwordHelpBlock" class="form-text">
                                                 Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должен содержать пробелов, специальных символов или эмодзи.
@@ -163,7 +170,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="editYearOfBirth" class="form-label">Year Of Birth</label>
-                                            <input type="number" class="form-control" id="editYearOfBirth"
+                                            <input type="number" class="form-control is-valid" id="editYearOfBirth"
                                                    name="yearOfBirth" required>
                                         </div>
                                         <div class="mb-3">
