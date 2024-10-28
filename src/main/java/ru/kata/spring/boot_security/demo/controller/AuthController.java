@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.service.RegistrationService;
+import ru.kata.spring.boot_security.demo.service.RegistrationServiceImpl;
 import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
@@ -17,12 +17,12 @@ import javax.validation.Valid;
 @Controller
 public class AuthController {
     private final UserValidator userValidator;
-    private final RegistrationService registrationService;
+    private final RegistrationServiceImpl registrationServiceImpl;
 
     @Autowired
-    public AuthController(UserValidator userValidator, RegistrationService registrationService) {
+    public AuthController(UserValidator userValidator, RegistrationServiceImpl registrationServiceImpl) {
         this.userValidator = userValidator;
-        this.registrationService = registrationService;
+        this.registrationServiceImpl = registrationServiceImpl;
     }
 
 //    @GetMapping("/login")
@@ -50,7 +50,7 @@ public class AuthController {
             return "/registration";
         }
 
-        registrationService.register(user);
+        registrationServiceImpl.register(user);
 
         return "redirect:/login";
     }

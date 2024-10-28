@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +15,7 @@ import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
-import ru.kata.spring.boot_security.demo.service.RegistrationService;
+import ru.kata.spring.boot_security.demo.service.RegistrationServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
 import ru.kata.spring.boot_security.demo.util.UserValidator;
 import javax.validation.Valid;
@@ -29,19 +31,18 @@ public class AdminController {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserValidator userValidator;
-    private final RegistrationService registrationService;
+    private final RegistrationServiceImpl registrationServiceImpl;
 
     @Autowired
     public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder,
                            RoleRepository roleRepository, UserValidator userValidator,
-                           RegistrationService registrationService) {
+                           RegistrationServiceImpl registrationServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userValidator = userValidator;
-        this.registrationService = registrationService;
+        this.registrationServiceImpl = registrationServiceImpl;
     }
-
 
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -53,6 +54,9 @@ public class AdminController {
                 .map(role -> role.getName().replace("ROLE_", "")) // Убираем ROLE_
                 .collect(Collectors.joining(" ")); // Объединяем с пробелами
         model.addAttribute("roles", roles);
+        List<Role> roleList = roleRepository.findAll();
+        model.addAttribute("roleList", roleList);
+        model.addAttribute("user", userDetails.getUser());
         return "admin";
     }
     @GetMapping("/add")
@@ -61,9 +65,16 @@ public class AdminController {
         model.addAttribute("roles", roles);
         return "admin/add";
     }
+
+    // Получение информации о пользователе по ID
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userDetailsServiceImpl.findUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
     @PostMapping("/add")
     public String add( @ModelAttribute("user") @Valid User user) {
-        registrationService.register(user);
+        registrationServiceImpl.register(user);
         return "redirect:/admin";
     }
     @GetMapping("/edit")
@@ -75,10 +86,8 @@ public class AdminController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/admin/edit";
-        }
+    public String edit(@Valid @ModelAttribute("user") User user) {
+
         User existingUser = userDetailsServiceImpl.findUserById(user.getId());
         existingUser.setUsername(user.getUsername());
         existingUser.setYearOfBirth(user.getYearOfBirth());
@@ -86,11 +95,9 @@ public class AdminController {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         Set<Role> roles = new HashSet<>();
-
         for (Role role : user.getRoles()) {
-            String roleName = role.getName();
 
-            Role dbRole = roleRepository.findByName(roleName);
+            Role dbRole = roleRepository.findByName(role.getName());
             roles.add(dbRole);
         }
         existingUser.setRoles(roles);
