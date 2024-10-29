@@ -16,6 +16,7 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 import ru.kata.spring.boot_security.demo.service.RegistrationServiceImpl;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
 import ru.kata.spring.boot_security.demo.util.UserValidator;
 import javax.validation.Valid;
@@ -32,16 +33,18 @@ public class AdminController {
     private final RoleRepository roleRepository;
     private final UserValidator userValidator;
     private final RegistrationServiceImpl registrationServiceImpl;
+    private final RoleServiceImpl roleServiceImpl;
 
     @Autowired
     public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder,
                            RoleRepository roleRepository, UserValidator userValidator,
-                           RegistrationServiceImpl registrationServiceImpl) {
+                           RegistrationServiceImpl registrationServiceImpl, RoleServiceImpl roleServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userValidator = userValidator;
         this.registrationServiceImpl = registrationServiceImpl;
+        this.roleServiceImpl = roleServiceImpl;
     }
 
     @GetMapping()
@@ -54,39 +57,42 @@ public class AdminController {
                 .map(role -> role.getName().replace("ROLE_", "")) // Убираем ROLE_
                 .collect(Collectors.joining(" ")); // Объединяем с пробелами
         model.addAttribute("roles", roles);
-        List<Role> roleList = roleRepository.findAll();
+        List<Role> roleList = roleServiceImpl.findAllRoles();
         model.addAttribute("roleList", roleList);
         model.addAttribute("user", userDetails.getUser());
         return "admin";
     }
+
     @GetMapping("/add")
     public String showAddUserPage(@ModelAttribute("user") User user, Model model) {
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = roleServiceImpl.findAllRoles();
         model.addAttribute("roles", roles);
         return "admin/add";
     }
 
-    // Получение информации о пользователе по ID
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userDetailsServiceImpl.findUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
     @PostMapping("/add")
-    public String add( @ModelAttribute("user") @Valid User user) {
+    public String add(@ModelAttribute("user") User user) {
         registrationServiceImpl.register(user);
         return "redirect:/admin";
     }
+
+    // Получение информации о пользователе по ID
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userDetailsServiceImpl.findUserById(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = roleServiceImpl.findAllRoles();
         model.addAttribute("roles", roles);
         return "/admin/edit";
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("user") User user) {
+    public String edit(@ModelAttribute("user") User user) {
 
         User existingUser = userDetailsServiceImpl.findUserById(user.getId());
         existingUser.setUsername(user.getUsername());

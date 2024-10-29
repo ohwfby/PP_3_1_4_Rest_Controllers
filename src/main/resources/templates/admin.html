@@ -123,7 +123,8 @@
                             <td th:utext="${user.roles}"></td>
                             <td th:utext="${user.yearOfBirth}"></td>
                             <td>
-                                <button id="edit-user" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editModal" th:data-userId="${user.getId()}">Edit</button>
+                                <button id="edit-user" type="button" class="btn btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#editModal" th:data-userId="${user.getId()}">Edit</button>
                             </td>
 
                             <td>
@@ -177,10 +178,11 @@
                 </div>
                 <!--Добавление юзера-->
                 <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="roles-tab">
-                    <form action="admin/add" method="post">
+                    <h2 class="text-left">Add New User</h2>
+                    <form th:action="@{/admin/add}" method="post">
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" th:field="*{username}" required>
+                            <input type="text" class="form-control" id="username" name="username" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
@@ -190,14 +192,13 @@
                             <label for="yearOfBirth" class="form-label">Year Of Birth</label>
                             <input type="number" class="form-control" id="yearOfBirth" name="yearOfBirth" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="editRoles" class="form-label">Role</label>
-                            <select multiple class="form-select" id="editRoles" name="roles" th:field="*{roleList}">
-                                <option th:each="role : ${roleList}" th:value="${role.id}"
-                                        th:text="${role.name}"></option>
+                        <div class="mb-3" >
+                            <label for="roles" class="form-label">Role</label>
+                            <select multiple class="form-select" id="roles" name="roles[]">
+                                <option th:each="role : ${roleList}"  th:value="${role.id}" th:text="${role.name}"></option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add new user</button>
+                        <button type="submit" class="btn btn-primary">Add User</button>
                     </form>
                 </div>
             </div>
