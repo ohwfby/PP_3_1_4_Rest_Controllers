@@ -130,7 +130,7 @@
                                         th:data-id="${user.getId()}"
                                         th:data-username="${user.getUsername()}"
                                         th:data-password="${user.getPassword()}"
-                                        th:data-age="${user.getYearOfBirth()}"
+                                        th:data-year="${user.getYearOfBirth()}"
                                         th:data-roles="${user.getRoles()}"
                                 >Edit</button>
                             </td>
@@ -176,11 +176,11 @@
                                     </div>
                                         <div class="mb-3">
                                         <label for="editAge" class="form-label">Year Of Birth</label>
-                                        <input type="number" class="form-control" id="editAge" name="age">
+                                        <input type="number" class="form-control" id="editAge" name="yearOfBirth">
                                     </div>
                                         <div class="mb-3">
                                             <label for="editRoles" class="form-label">Role</label>
-                                            <select multiple class="form-select" id="editRoles" name="roles">
+                                            <select multiple class="form-select" id="editRoles" name="roles" size="2">
                                                 <option th:each="role : ${roleList}"  th:value="${role.getId()}"
                                                 th:text="${role.getName()}"></option>
                                             </select>
@@ -222,8 +222,8 @@
                                             <input type="number" class="form-control" id="deleteAge" name="age" disabled>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="deleteRole" class="form-label">Role</label>
-                                            <select multiple class="form-select" id="deleteRole" name="roles" disabled>
+                                            <label for="deleteRoles" class="form-label">Role</label>
+                                            <select multiple class="form-select" id="deleteRoles" name="roles" disabled>
                                                 <option th:each="role : ${roleList}"  th:value="${role.getId()}"
                                                         th:text="${role.getName()}"></option>
                                             </select>
@@ -239,32 +239,34 @@
                     </div>
                 </div>
                     <!--Добавление юзера-->
-                    <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="roles-tab">
+                <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="roles-tab">
                     <h2 class="text-left">Add New User</h2>
+
+                    <div class="container d-flex justify-content-center align-items-center h-300">
+
                     <form th:action="@{/admin/add}" method="post">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                            <label style="font-weight: bold;" for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="username" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <label style="font-weight: bold;" for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="yearOfBirth" class="form-label">Year Of Birth</label>
-                            <input type="number" class="form-control" id="yearOfBirth" name="yearOfBirth" required>
+                            <label style="font-weight: bold;" for="yearOfBirth" class="form-label">Year Of Birth</label>
+                            <input type="number" class="form-control" id="yearOfBirth" name="yearOfBirth" placeholder="Year of Birth" required>
                         </div>
-                        <div class="mb-3" >
-                            <label for="roles" class="form-label">Role</label>
-                            <select multiple class="form-select" id="roles" name="roles[]">
+                        <div class="mb-3">
+                            <label style="font-weight: bold;" for="roles" class="form-label">Role</label>
+                            <select multiple class="form-select" id="roles" name="roles[]" size="2">
                                 <option th:each="role : ${roleList}"  th:value="${role.id}" th:text="${role.name}"></option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Add User</button>
                     </form>
                 </div>
-
-
+                </div>
             </div>
         </div>
     </div>
@@ -283,7 +285,7 @@
             var id = button.data('id');
             var username = button.data('username');
             var password = button.data('password');
-            var age = button.data('age');
+            var year = button.data('year');
             var roles = button.data('roles');
 
 
@@ -292,7 +294,7 @@
             modal.find('#editShownId').val(id);
             modal.find('#editUsername').val(username);
             modal.find('#editPassword').val(password);
-            modal.find('#editAge').val(age);
+            modal.find('#editAge').val(year);
 
             var select = modal.find('#editRole');
             select.val([]);

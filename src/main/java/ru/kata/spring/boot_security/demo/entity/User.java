@@ -74,7 +74,6 @@ public class User {
         this.yearOfBirth = yearOfBirth;
     }
 
-
     @Override
     public String toString() {
         return "User{" +
@@ -83,12 +82,12 @@ public class User {
                 ", password='" + password + '\'' +
                 ", yearOfBirth=" + yearOfBirth + '}';
     }
+
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
             this.roles = roles;
-
     }
 }

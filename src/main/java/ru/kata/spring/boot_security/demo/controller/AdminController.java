@@ -65,7 +65,8 @@ public class AdminController {
 
     @PostMapping("/add")
     public String add(@ModelAttribute("user") User user) {
-        registrationServiceImpl.register(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDetailsServiceImpl.save(user);
         return "redirect:/admin";
     }
 
@@ -79,10 +80,8 @@ public class AdminController {
 
     @PostMapping("/edit")
     public String edit(@ModelAttribute("user") User user) {
-
         User existingUser = userDetailsServiceImpl.findUserById(user.getId());
         existingUser.setUsername(user.getUsername());
-        existingUser.setYearOfBirth(user.getYearOfBirth());
         if (!user.getPassword().equals(existingUser.getPassword())) {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -93,7 +92,7 @@ public class AdminController {
             roles.add(dbRole);
         }
         existingUser.setRoles(roles);
-
+        existingUser.setYearOfBirth(user.getYearOfBirth());
         userDetailsServiceImpl.save(existingUser);
         return "redirect:/admin";
     }

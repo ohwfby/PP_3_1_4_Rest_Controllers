@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
@@ -26,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private EntityManager em;
 
     private final UserRepository userRepository;
+
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -59,12 +61,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     @Transactional
     public void save(User user) {
-        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            return;
-        }
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         userRepository.save(user);
+    }
+
+    // Исключение, которое будет выбрасываться при попытке добавить существующего пользователя
+    class UserAlreadyExistsException extends RuntimeException {
+        public UserAlreadyExistsException(String message) {
+            super(message);
+        }
     }
 }
