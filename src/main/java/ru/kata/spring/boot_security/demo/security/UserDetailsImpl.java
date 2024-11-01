@@ -1,7 +1,7 @@
 package ru.kata.spring.boot_security.demo.security;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<Role> getAuthorities() {
         return user.getRoles(); // для вызова ролей
     }
 

@@ -1,14 +1,11 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.entity.Role;
@@ -18,8 +15,6 @@ import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 import ru.kata.spring.boot_security.demo.service.RegistrationServiceImpl;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
-import ru.kata.spring.boot_security.demo.util.UserValidator;
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,18 +26,16 @@ public class AdminController {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final UserValidator userValidator;
     private final RegistrationServiceImpl registrationServiceImpl;
     private final RoleServiceImpl roleServiceImpl;
 
     @Autowired
     public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder,
-                           RoleRepository roleRepository, UserValidator userValidator,
+                           RoleRepository roleRepository,
                            RegistrationServiceImpl registrationServiceImpl, RoleServiceImpl roleServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.userValidator = userValidator;
         this.registrationServiceImpl = registrationServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }
@@ -74,13 +67,6 @@ public class AdminController {
     public String add(@ModelAttribute("user") User user) {
         registrationServiceImpl.register(user);
         return "redirect:/admin";
-    }
-
-    // Получение информации о пользователе по ID
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        User user = userDetailsServiceImpl.findUserById(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/edit")
