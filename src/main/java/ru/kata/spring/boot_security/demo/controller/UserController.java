@@ -30,7 +30,7 @@ public class UserController {
             User user = userDetailsServiceImpl.findUserById(userDetails.getUser().getId());
             model.addAttribute("user", user);
         }
-        model.addAttribute("username", userDetails.getUsername());
+        model.addAttribute("username", userDetails.getUser().getUsername());
         String roles = userDetails.getUser().getRoles()
                 .stream()
                 .map(role -> role.getName().replace("ROLE_", "")) // Убираем ROLE_

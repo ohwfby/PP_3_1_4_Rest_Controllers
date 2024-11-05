@@ -120,7 +120,7 @@
                             <td th:utext="${user.id}"></td>
                             <td th:utext="${user.username}"></td>
                             <td th:utext="${user.password}"></td>
-                            <td> <span th:each="role : ${user.getRoles()}"
+                            <td> <span th:each="role : ${user.getAuthorities()}"
                                 th:text="${#strings.replace(role, 'ROLE_', '') + ' '}"></span>
                             </td>
                             <td th:utext="${user.yearOfBirth}"></td>
@@ -131,8 +131,9 @@
                                         th:data-username="${user.getUsername()}"
                                         th:data-password="${user.getPassword()}"
                                         th:data-year="${user.getYearOfBirth()}"
-                                        th:data-roles="${user.getRoles()}"
-                                >Edit</button>
+                                        th:data-roles="${user.getRoles()}">
+                                    Edit
+                                </button>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-danger btn-sm text-white"
@@ -148,7 +149,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <!-- Модальное окно -->
+                    <!-- Изменение пользователя -->
                     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -178,11 +179,11 @@
                                         <label for="editAge" class="form-label">Year Of Birth</label>
                                         <input type="number" class="form-control" id="editAge" name="yearOfBirth">
                                     </div>
-                                        <div class="mb-3">
-                                            <label for="editRoles" class="form-label">Role</label>
-                                            <select multiple class="form-select" id="editRoles" name="roles" size="2">
+                                        <div class="form-group">
+                                            <label for="editRole">Role</label>
+                                            <select class="form-control" multiple id="editRole" name="roles" size="2">
                                                 <option th:each="role : ${roleList}"  th:value="${role.getId()}"
-                                                th:text="${role.getName()}"></option>
+                                                        th:text="${role.getName()}"></option>
                                             </select>
                                         </div>
                                         <div class="modal-footer">
@@ -244,7 +245,7 @@
 
                     <div class="container d-flex justify-content-center align-items-center h-300">
 
-                    <form th:action="@{/admin/add}" method="post">
+                    <form th:action="@{/admin/add}" method="post" th:object="${user}">
                         <div class="mb-3">
                             <label style="font-weight: bold;" for="username" class="form-label">Username</label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="username" required>
@@ -256,6 +257,7 @@
                         <div class="mb-3">
                             <label style="font-weight: bold;" for="yearOfBirth" class="form-label">Year Of Birth</label>
                             <input type="number" class="form-control" id="yearOfBirth" name="yearOfBirth" placeholder="Year of Birth" required>
+
                         </div>
                         <div class="mb-3">
                             <label style="font-weight: bold;" for="roles" class="form-label">Role</label>
@@ -299,12 +301,11 @@
             var select = modal.find('#editRole');
             select.val([]);
 
-
             if (roles.length !== 0) {
                 roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
                 roles.forEach((role) => {
                     select.find('option').each(function () {
-                        if ($(this).val() === role) {
+                        if ($(this).val() == role) {
                             $(this).prop('selected', true);
                         }
                     });

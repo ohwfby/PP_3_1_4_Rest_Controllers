@@ -1,33 +1,22 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @PersistenceContext
-    private EntityManager em;
-
     private final UserRepository userRepository;
-
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -62,12 +51,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public void save(User user) {
         userRepository.save(user);
-    }
-
-    // Исключение, которое будет выбрасываться при попытке добавить существующего пользователя
-    class UserAlreadyExistsException extends RuntimeException {
-        public UserAlreadyExistsException(String message) {
-            super(message);
-        }
     }
 }

@@ -12,7 +12,6 @@ import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
-import ru.kata.spring.boot_security.demo.service.RegistrationServiceImpl;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
 import java.util.HashSet;
@@ -26,17 +25,15 @@ public class AdminController {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final RegistrationServiceImpl registrationServiceImpl;
     private final RoleServiceImpl roleServiceImpl;
 
     @Autowired
     public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder,
                            RoleRepository roleRepository,
-                           RegistrationServiceImpl registrationServiceImpl, RoleServiceImpl roleServiceImpl) {
+                            RoleServiceImpl roleServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.registrationServiceImpl = registrationServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }
 
@@ -50,17 +47,9 @@ public class AdminController {
                 .map(role -> role.getName().replace("ROLE_", "")) // Убираем ROLE_
                 .collect(Collectors.joining(" ")); // Объединяем с пробелами
         model.addAttribute("roles", roles);
-        List<Role> roleList = roleServiceImpl.findAllRoles();
-        model.addAttribute("roleList", roleList);
+        model.addAttribute("roleList", roleServiceImpl.findAllRoles());
         model.addAttribute("user", userDetails.getUser());
         return "admin";
-    }
-
-    @GetMapping("/add")
-    public String showAddUserPage(@ModelAttribute("user") User user, Model model) {
-        List<Role> roles = roleServiceImpl.findAllRoles();
-        model.addAttribute("roles", roles);
-        return "admin/add";
     }
 
     @PostMapping("/add")
@@ -68,14 +57,6 @@ public class AdminController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDetailsServiceImpl.save(user);
         return "redirect:/admin";
-    }
-
-    @GetMapping("/edit")
-    public String editPage(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userDetailsServiceImpl.findUserById(id));
-        List<Role> roles = roleServiceImpl.findAllRoles();
-        model.addAttribute("roles", roles);
-        return "/admin/edit";
     }
 
     @PostMapping("/edit")
@@ -97,7 +78,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @RequestMapping("/delete")
+    @PostMapping("/delete")
     public String delete(@RequestParam Long id) {
         userDetailsServiceImpl.delete(id);
         return "redirect:/admin";
