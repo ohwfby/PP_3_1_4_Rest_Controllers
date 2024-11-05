@@ -174,7 +174,7 @@
                                     </div>
                                         <div class="form-group">
                                             <label for="editRole">Role</label>
-                                            <select class="form-control" multiple id="editRole" name="roles" size="2">
+                                            <select class="form-control" multiple id="editRole" name="roles" size="2" required>
                                                 <option th:each="role : ${roleList}"  th:value="${role.getId()}"
                                                         th:text="${role.getName()}"></option>
                                             </select>
@@ -293,16 +293,16 @@
             var select = modal.find('#editRole');
             select.val([]);
 
-            if (roles.length !== 0) {
-                roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
-                roles.forEach((role) => {
-                    select.find('option').each(function () {
-                        if ($(this).val() === role) {
-                            $(this).prop('selected', true);
-                        }
-                    });
-                });
-            }
+            // if (roles.length !== 0) {
+            //     roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
+            //     roles.forEach((role) => {
+            //         select.find('option').each(function () {
+            //             if ($(this).val() === role) {
+            //                 $(this).prop('selected', true);
+            //             }
+            //         });
+            //     });
+            // }
         });
         $('#deleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);

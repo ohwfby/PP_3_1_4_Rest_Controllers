@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsServ {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,22 +36,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return new UserDetailsImpl(user.get());
     }
+
+    @Override
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         return userFromDb.orElse(new User());
     }
+
+    @Override
     @Transactional
     public List<User> allUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     @Transactional
     public void delete(Long id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
         }
     }
+
+    @Override
     @Transactional
     public void save(User user) {
         userRepository.save(user);
