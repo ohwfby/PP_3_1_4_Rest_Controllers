@@ -136,15 +136,8 @@
                                 </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger btn-sm text-white"
-                                        data-toggle="modal"
-                                        data-target="#deleteModal"
-                                        th:data-id="${user.getId()}"
-                                        th:data-username="${user.getUsername()}"
-                                        th:data-password="${user.getPassword()}"
-                                        th:data-age="${user.getYearOfBirth()}"
-                                        th:data-roles="${user.getRoles()}"
-                                    >Delete</button>
+                                <a th:href="'#deleteUserPopup' + ${user.getId()}"
+                                   class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                         </tbody>
@@ -157,7 +150,7 @@
                                     <h5 class="modal-title" id="editModalLabel">Edit User</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form id="editUserForm" th:action="@{/admin/edit}" th:method="post">
+                                <form id="editUserForm" th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:method="post">
                                     <div class="modal-body">
                                         <input type="hidden" name="id" id="editId">
                                         <input type="hidden" name="action" value="edit"/>
@@ -273,7 +266,6 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -305,45 +297,45 @@
                 roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
                 roles.forEach((role) => {
                     select.find('option').each(function () {
-                        if ($(this).val() == role) {
+                        if ($(this).val() === role) {
                             $(this).prop('selected', true);
                         }
                     });
                 });
             }
         });
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
 
-        var id = button.data('id');
-        var username = button.data('username');
-        var password = button.data('password');
-        var age = button.data('age');
-        var roles = button.data('roles');
-
-
-        var modal = $(this);
-        modal.find('#deleteId').val(id);
-        modal.find('#deleteShownId').val(id);
-        modal.find('#deleteUsername').val(username);
-        modal.find('#deletePassword').val(password);
-        modal.find('#deleteAge').val(age);
-
-        var select = modal.find('#deleteRole');
-        select.val([]);
+            var id = button.data('id');
+            var username = button.data('username');
+            var password = button.data('password');
+            var age = button.data('age');
+            var roles = button.data('roles');
 
 
-        if (roles.length !== 0) {
-            roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
-            roles.forEach((role) => {
-                select.find('option').each(function () {
-                    if ($(this).val() == role) {
-                        $(this).prop('selected', true);
-                    }
+            var modal = $(this);
+            modal.find('#deleteId').val(id);
+            modal.find('#deleteShownId').val(id);
+            modal.find('#deleteUsername').val(username);
+            modal.find('#deletePassword').val(password);
+            modal.find('#deleteAge').val(age);
+
+            var select = modal.find('#deleteRole');
+            select.val([]);
+
+
+            if (roles.length !== 0) {
+                roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
+                roles.forEach((role) => {
+                    select.find('option').each(function () {
+                        if ($(this).val() === role) {
+                            $(this).prop('selected', true);
+                        }
+                    });
                 });
-            });
-        }
-    });
+            }
+        });
     });
 </script>
 </body>
