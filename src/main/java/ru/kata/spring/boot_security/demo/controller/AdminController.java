@@ -3,37 +3,26 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
     private final RoleServiceImpl roleServiceImpl;
 
     @Autowired
-    public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder,
-                           RoleRepository roleRepository,
-                            RoleServiceImpl roleServiceImpl) {
+    public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, RoleServiceImpl roleServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
         this.roleServiceImpl = roleServiceImpl;
     }
 
@@ -44,8 +33,8 @@ public class AdminController {
         model.addAttribute("username", userDetails.getUsername());
         String roles = userDetails.getUser().getRoles()
                 .stream()
-                .map(role -> role.getName().replace("ROLE_", "")) // Убираем ROLE_
-                .collect(Collectors.joining(" ")); // Объединяем с пробелами
+                .map(role -> role.getName().replace("ROLE_", ""))
+                .collect(Collectors.joining(" "));
         model.addAttribute("roles", roles);
         model.addAttribute("roleList", roleServiceImpl.findAllRoles());
         model.addAttribute("user", userDetails.getUser());
@@ -54,7 +43,6 @@ public class AdminController {
 
     @PostMapping("/add")
     public String add(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDetailsServiceImpl.save(user);
         return "redirect:/admin";
     }
@@ -62,19 +50,7 @@ public class AdminController {
     @PostMapping("/edit")
     public String edit(@ModelAttribute("user") User user) {
         User existingUser = userDetailsServiceImpl.findUserById(user.getId());
-        existingUser.setUsername(user.getUsername());
-        if (!user.getPassword().equals(existingUser.getPassword())) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        Set<Role> roles = new HashSet<>();
-        for (Role role : user.getRoles()) {
-
-            Role dbRole = roleRepository.findByName(role.getName());
-            roles.add(dbRole);
-        }
-        existingUser.setRoles(roles);
-        existingUser.setYearOfBirth(user.getYearOfBirth());
-        userDetailsServiceImpl.save(existingUser);
+        userDetailsServiceImpl.update(existingUser, user);
         return "redirect:/admin";
     }
 

@@ -136,8 +136,15 @@
                                 </button>
                             </td>
                             <td>
-                                <a th:href="'#deleteUserPopup' + ${user.getId()}"
-                                   class="btn btn-danger">Delete</a>
+                                <button type="button" class="btn btn-danger btn-sm text-white"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        th:data-id="${user.getId()}"
+                                        th:data-username="${user.getUsername()}"
+                                        th:data-password="${user.getPassword()}"
+                                        th:data-age="${user.getYearOfBirth()}"
+                                        th:data-roles="${user.getRoles()}"
+                                >Delete</button>
                             </td>
                         </tr>
                         </tbody>
@@ -150,7 +157,7 @@
                                     <h5 class="modal-title" id="editModalLabel">Edit User</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form id="editUserForm" th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:method="post">
+                                <form id="editUserForm" th:action="@{/admin/edit}" th:method="post">
                                     <div class="modal-body">
                                         <input type="hidden" name="id" id="editId">
                                         <input type="hidden" name="action" value="edit"/>
@@ -216,8 +223,8 @@
                                             <input type="number" class="form-control" id="deleteAge" name="age" disabled>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="deleteRoles" class="form-label">Role</label>
-                                            <select multiple class="form-select" id="deleteRoles" name="roles" disabled>
+                                            <label for="deleteRole" class="form-label">Role</label>
+                                            <select multiple class="form-select" id="deleteRole" name="roles" disabled>
                                                 <option th:each="role : ${roleList}"  th:value="${role.getId()}"
                                                         th:text="${role.getName()}"></option>
                                             </select>
@@ -293,16 +300,16 @@
             var select = modal.find('#editRole');
             select.val([]);
 
-            // if (roles.length !== 0) {
-            //     roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
-            //     roles.forEach((role) => {
-            //         select.find('option').each(function () {
-            //             if ($(this).val() === role) {
-            //                 $(this).prop('selected', true);
-            //             }
-            //         });
-            //     });
-            // }
+            if (roles.length !== 0) {
+                roles = roles.replace(/[\[\]]/g, '').split(',').map(item => item.trim());
+                roles.forEach((role) => {
+                    select.find('option').each(function () {
+                        if ($(this).val() === role) {
+                            $(this).prop('selected', true);
+                        }
+                    });
+                });
+            }
         });
         $('#deleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
