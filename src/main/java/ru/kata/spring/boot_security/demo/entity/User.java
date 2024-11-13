@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -55,7 +56,7 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public @NotEmpty(message = "Name should not be empty") @NotBlank(message = "Name should not be blank") @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters") String getUsername() {
+    public String getUsername() {
         return username;
     }
 
@@ -79,7 +80,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(@NotEmpty(message = "Name should not be empty") @NotBlank(message = "Name should not be blank") @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters") String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -88,20 +89,20 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public @NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 68, message = "Password should be between 2 and 30 characters") String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NotEmpty(message = "Password should not be empty") @NotBlank(message = "Password should not be blank") @Size(min = 2, max = 68, message = "Password should be between 2 and 30 characters") String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public @Min(value = 1900, message = "Year of birth must be over 1900") Integer getYearOfBirth() {
+    public Integer getYearOfBirth() {
         return yearOfBirth;
     }
 
-    public void setYearOfBirth(@Min(value = 1900, message = "Year of birth must be over 1900") Integer yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
+    public void setYearOfBirth(Integer yearOfBirth) {
+        this.yearOfBirth = this.yearOfBirth;
     }
 
     @Override
@@ -119,5 +120,9 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
             this.roles = roles;
+    }
+
+    public String rolesToString() {
+        return roles.stream().map(c -> c.toString().replaceAll("ROLE_|\\\\|[|\\\\]|", "")).collect(Collectors.joining(", "));
     }
 }

@@ -2,6 +2,8 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,10 +16,8 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsServ {
@@ -42,7 +42,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
         }
         return new UserDetailsImpl(user.get());
     }
-
+    private Collection<? extends GrantedAuthority> mapRolesAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+    }
     @Override
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
@@ -70,7 +72,28 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
-
+    @Override
+    @Transactional
+    public User saveUser(User existingUser, User user) {
+        if (existingUser != null && (user.getPassword() == null || user.getPassword().isEmpty())) {
+            user.setPassword(existingUser.getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (existingUser != null) {
+            user.setId(existingUser.getId());
+        }
+        if (existingUser != null && (user.getAuthorities() == null || user.getAuthorities().isEmpty())) {
+            user.setRoles((Set<Role>) existingUser.getAuthorities());
+        }
+        if (existingUser != null && (user.getUsername() == null || user.getUsername().isEmpty())) {
+            user.setUsername(existingUser.getUsername());
+        }
+        if (existingUser != null && (user.getYearOfBirth() == null)) {
+            user.setYearOfBirth(existingUser.getYearOfBirth());
+        }
+        return userRepository.save(user);
+    }
     @Override
     @Transactional
     public void update(User existingUser, User user) {

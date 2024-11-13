@@ -9,5 +9,6 @@ public interface UserDetailsServ {
     List<User> allUsers();
     void delete(Long id);
     void save(User user);
+    User saveUser(User existingUser, User user);
     void update(User existingUser, User user);
 }

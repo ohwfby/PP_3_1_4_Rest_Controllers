@@ -1,111 +1,160 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"-->
+<!--      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--    <title>Admin panel</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"-->
+<!--          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"-->
+<!--          crossorigin="anonymous">-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            display: flex; /* Используем Flexbox для общего выравнивания */-->
+<!--            flex-direction: column; /* Вертикальная ориентация */-->
+<!--            height: 100vh; /* Высота родительского контейнера */-->
+<!--            margin: 0; /* Убираем отступы по умолчанию */-->
+<!--        }-->
+<!--        .main {-->
+<!--            display: flex; /* Основное содержимое выравнивается горизонтально */-->
+<!--            flex: 1; /* Остальная область для контента */-->
+<!--        }-->
+<!--        .sidebar {-->
+<!--            flex-direction: column; /* Вертикальная ориентация */-->
+<!--            width: 250px; /* Ширина боковой панели */-->
+<!--            background-color: #ffffff; /* Цвет фона - белый */-->
+<!--            color: blue; /* Цвет текста */-->
+<!--        }-->
+<!--        .content {-->
+<!--            flex: 1; /* Ширина основного контента */-->
+<!--            padding: 20px; /* Отступы для контента */-->
+<!--        }-->
+<!--        .list-group {-->
+<!--            padding-top: 20px; /* Отступы для контента */-->
+<!--            flex: 1; /* Ширина основного контента */-->
+<!--            width: 250px; /* Ширина боковой панели */-->
+<!--            background-color: #ffffff; /* Цвет фона - белый */-->
+<!--            color: blue; /* Цвет текста */-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Навбар сверху &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg" style="background-color: #343a40;">-->
+<!--    <div class="container-fluid">-->
+<!--        <div style="color: white; display: flex; align-items: center;">-->
+<!--            <a class="navbar-brand" style="color: white;" th:text="${username}"></a>-->
+<!--            <span style="margin-left: 1px;">with roles:</span>-->
+<!--            <span th:text="${roles}" style="margin-left: 5px;"></span>-->
+<!--        </div>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">-->
+<!--                <form th:action="@{/logout}" th:method="POST">-->
+<!--                    <input type="submit" value="Logout" style="color: #f8f9fa; border: none; background: transparent; cursor: pointer;" />-->
+<!--                </form>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+<!--&lt;!&ndash; Боковая панель &ndash;&gt;-->
+<!--<div class="main">-->
+<!--    <div class="sidebar">-->
+<!--        <div class="list-group">-->
+<!--            <ul class="nav flex-column" th:each="role : ${roles}">-->
+<!--                <li class="nav-item">-->
+<!--                    <div th:if="${roles.contains('ADMIN')}">-->
+<!--                        <a th:href="@{/admin}" class="list-group-item list-group-item-action">Admin</a>-->
+<!--                    </div>-->
+<!--                    <div th:if="${roles.contains('USER')}">-->
+<!--                        <a th:href="@{/user}" class="list-group-item list-group-item-action active">User</a>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Основное содержимое &ndash;&gt;-->
+<!--    <div class="content">-->
+<!--        <div class="admin-panel">-->
+<!--            <h1 class="text-left">User information-page</h1>-->
+<!--            <div class="tab-content" id="myTabContent">-->
+<!--                <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">-->
+<!--                    <h2 class="text-left">About user</h2>-->
+<!--                    <table id="about-user" class="table table-bordered text-center">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>ID</th>-->
+<!--                            <th>Username</th>-->
+<!--                            <th>Role</th>-->
+<!--                            <th>Year Of Birth</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--&lt;!&ndash;                        <tbody id="about-user"></tbody>&ndash;&gt;-->
+<!--                    </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${user.getUsername()} + '\'s page'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
-    <style>
-        body {
-            display: flex; /* Используем Flexbox для общего выравнивания */
-            flex-direction: column; /* Вертикальная ориентация */
-            height: 100vh; /* Высота родительского контейнера */
-            margin: 0; /* Убираем отступы по умолчанию */
-        }
-        .main {
-            display: flex; /* Основное содержимое выравнивается горизонтально */
-            flex: 1; /* Остальная область для контента */
-        }
-        .sidebar {
-            flex-direction: column; /* Вертикальная ориентация */
-            width: 250px; /* Ширина боковой панели */
-            background-color: #ffffff; /* Цвет фона - белый */
-            color: blue; /* Цвет текста */
-        }
-        .content {
-            flex: 1; /* Ширина основного контента */
-            padding: 20px; /* Отступы для контента */
-        }
-        .list-group {
-            padding-top: 20px; /* Отступы для контента */
-            flex: 1; /* Ширина основного контента */
-            width: 250px; /* Ширина боковой панели */
-            background-color: #ffffff; /* Цвет фона - белый */
-            color: blue; /* Цвет текста */
-        }
-    </style>
 </head>
 <body>
-<!-- Навбар сверху -->
-<nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
-    <div class="container-fluid">
-        <div style="color: white; display: flex; align-items: center;">
-            <a class="navbar-brand" style="color: white;" th:text="${username}"></a>
-            <span style="margin-left: 1px;">with roles:</span>
-            <span th:text="${roles}" style="margin-left: 5px;"></span>
+<div>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" th:text="${user.getUsername()} + ' with roles: ' + ${user.rolesToString()}" href="#">email and
+            role</a>
+        <a th:href="@{/logout}" class="btn btn-link text-white-50">Logout</a>
+    </nav>
+</div>
+<div class="container-fluid bg-light">
+    <div class="row">
+        <div class="col-md-2 p-0 pt-2">
+            <a>
+                <button class="btn btn-primary w-100 text-start">User</button>
+            </a>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <form th:action="@{/logout}" th:method="POST">
-                    <input type="submit" value="Logout" style="color: #f8f9fa; border: none; background: transparent; cursor: pointer;" />
-                </form>
-            </ul>
-        </div>
-    </div>
-</nav>
-<!-- Боковая панель -->
-<div class="main">
-    <div class="sidebar">
-        <div class="list-group">
-            <ul class="nav flex-column" th:each="role : ${roles}">
-                <li class="nav-item">
-                    <div th:if="${roles.contains('ADMIN')}">
-                        <a th:href="@{/admin}" class="list-group-item list-group-item-action">Admin</a>
-                    </div>
-                    <div th:if="${roles.contains('USER')}">
-                        <a th:href="@{/user}" class="list-group-item list-group-item-action active">User</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!-- Основное содержимое -->
-    <div class="content">
-        <div class="admin-panel">
-            <h1 class="text-left">User information-page</h1>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
-                    <h2 class="text-left">About user</h2>
-                    <table id="users-table" class="table table-bordered text-center">
+        <div class="col-md-9 ml-sm-auto col-lg-10 px-4 bg-light vh-100">
+            <h2 class="mt-3">User information-page</h2>
+            <div class="card rounded-1">
+                <div class="card-header"><h5 class="m-0">About user</h5></div>
+                <div class="card-body">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Year Of Birth</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
                         </tr>
                         </thead>
-                        <tr>
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.username}"></td>
-                            <td> <span th:each="role : ${user.getRoles()}"
-                                       th:text="${#strings.replace(role, 'ROLE_', '') + ' '}"></span>
-                            </td>
-                            <td th:text="${user.yearOfBirth}"></td>
-                        </tr>
+                        <tbody id="about-user"></tbody>
                     </table>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+<script src="main.js"></script>
 </body>
 </html>

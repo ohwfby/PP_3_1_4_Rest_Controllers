@@ -5,9 +5,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.security.UserDetailsImpl;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
@@ -16,12 +15,13 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminRestController {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final RoleServiceImpl roleServiceImpl;
 
+
     @Autowired
-    public AdminController(UserDetailsServiceImpl userDetailsServiceImpl, RoleServiceImpl roleServiceImpl) {
+    public AdminRestController(UserDetailsServiceImpl userDetailsServiceImpl, RoleServiceImpl roleServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }
@@ -39,24 +39,5 @@ public class AdminController {
         model.addAttribute("roleList", roleServiceImpl.findAllRoles());
         model.addAttribute("user", userDetails.getUser());
         return "admin";
-    }
-
-    @PostMapping("/add")
-    public String add(@ModelAttribute("user") User user) {
-        userDetailsServiceImpl.save(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/edit")
-    public String edit(@ModelAttribute("user") User user) {
-        User existingUser = userDetailsServiceImpl.findUserById(user.getId());
-        userDetailsServiceImpl.update(existingUser, user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/delete")
-    public String delete(@RequestParam Long id) {
-        userDetailsServiceImpl.delete(id);
-        return "redirect:/admin";
     }
 }
